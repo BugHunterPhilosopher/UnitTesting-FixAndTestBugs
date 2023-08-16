@@ -1,13 +1,14 @@
-package com.assetco.search.results;
+package com.assetco.search.tests;
 
+import com.assetco.search.results.AssetPurchaseInfo;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AssetPurchaseInfoTests {
+class AssetPurchaseInfoTests {
 
     @Test
-    public void storesAndReturnsValues() {
+    void storesAndReturnsValues() {
         var timesShown = Any.anyLong();
         long timesPurchased = Any.anyLong();
         var totalRevenue = Any.money();
@@ -17,7 +18,7 @@ public class AssetPurchaseInfoTests {
 
         assertEquals(timesShown, info.getTimesShown());
         assertEquals(timesPurchased, info.getTimesPurchased());
-        assertEquals(totalRevenue, info.getTotalRevenue());
-        assertEquals(royaltiesOwed, info.getTotalRoyaltiesOwed());
+        Assertions.assertEquals(totalRevenue, info.getTotalRevenue());
+        Assertions.assertEquals(royaltiesOwed, info.getTotalRoyaltiesOwed());
     }
 }

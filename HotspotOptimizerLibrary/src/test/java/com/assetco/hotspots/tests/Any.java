@@ -1,15 +1,20 @@
-package com.assetco.search.results;
+package com.assetco.hotspots.tests;
 
-import java.math.*;
-import java.net.*;
-import java.util.*;
+import com.assetco.search.results.*;
+
+import java.math.BigDecimal;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Used to generate test data.
  */
 class Any {
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     static AssetVendorRelationshipLevel relationshipLevel() {
         return anyEnumerationValue(AssetVendorRelationshipLevel.class);
@@ -79,7 +84,7 @@ class Any {
     /**
      * Genearte a set of topics with at least one topic in it but not more than five.
      */
-    private static List<AssetTopic> setOfTopics() {
+    public static List<AssetTopic> setOfTopics() {
         var result = new ArrayList<AssetTopic>();
         for (var count = 1 + random.nextInt(4); count > 0; --count)
             result.add(anyTopic());

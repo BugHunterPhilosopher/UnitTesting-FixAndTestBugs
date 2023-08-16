@@ -1,12 +1,13 @@
-package com.assetco.search.results;
+package com.assetco.search.tests;
 
+import com.assetco.search.results.AssetVendor;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AssetVendorTests {
+class AssetVendorTests {
     @Test
-    public void createAndGetValues() {
+    void createAndGetValues() {
         var id = Any.string();
         var displayName = Any.string();
         var relationshipLevel = Any.relationshipLevel();

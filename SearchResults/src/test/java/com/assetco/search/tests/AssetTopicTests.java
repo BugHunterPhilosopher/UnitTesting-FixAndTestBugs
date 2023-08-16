@@ -1,12 +1,13 @@
-package com.assetco.search.results;
+package com.assetco.search.tests;
 
+import com.assetco.search.results.AssetTopic;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AssetTopicTests {
+class AssetTopicTests {
     @Test
-    public void storesAndRetrievesValues() {
+    void storesAndRetrievesValues() {
         var id = Any.string();
         var displayName = Any.string();
 

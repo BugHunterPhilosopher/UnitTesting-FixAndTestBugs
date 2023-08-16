@@ -1,11 +1,14 @@
-package com.assetco.search.results;
+package com.assetco.search.tests;
 
+import com.assetco.search.results.Asset;
+import com.assetco.search.results.HotspotKey;
+import com.assetco.search.results.SearchResults;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SearchResultsTests {
+class SearchResultsTests {
     private SearchResults results;
 
     @BeforeEach
@@ -14,12 +17,12 @@ public class SearchResultsTests {
     }
 
     @Test
-    public void startsEmpty() {
+    void startsEmpty() {
         thenFoundItemCountIs(0);
     }
 
     @Test
-    public void addingAnItem() {
+    void addingAnItem() {
         var count = givenFoundItemCount();
 
         var asset = whenAddAsset();
@@ -29,12 +32,12 @@ public class SearchResultsTests {
     }
 
     @Test
-    public void hotspotsStartEmpty() {
+    void hotspotsStartEmpty() {
         thenHotspotItemCountIs(Any.hotspotKey(), 0);
     }
 
     @Test
-    public void addingAnItemToAHotspot() {
+    void addingAnItemToAHotspot() {
         var key = givenHotspotKey();
         var originalHotspotMemberCount = givenHotspotMemberCount(key);
 
@@ -45,7 +48,7 @@ public class SearchResultsTests {
     }
 
     @Test
-    public void clearingHotspots() {
+    void clearingHotspots() {
         var key = Any.hotspotKey();
         givenItemAddedToHotspot(key);
 

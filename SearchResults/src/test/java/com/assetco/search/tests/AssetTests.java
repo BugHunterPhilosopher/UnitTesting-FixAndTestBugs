@@ -1,17 +1,17 @@
-package com.assetco.search.results;
+package com.assetco.search.tests;
 
+import com.assetco.search.results.Asset;
+import com.assetco.search.results.AssetTopic;
 import org.junit.jupiter.api.*;
 
-import java.math.*;
-import java.net.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AssetTests {
+class AssetTests {
 
     @Test
-    public void returnsPropertyValues() {
+    void returnsPropertyValues() {
         var id = Any.string();
         var title = Any.string();
         var thumbnailURI = Any.URI();

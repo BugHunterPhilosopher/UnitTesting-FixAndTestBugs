@@ -1,5 +1,6 @@
-package com.assetco.search.results;
+package com.assetco.search.tests;
 
+import com.assetco.search.results.Money;
 import org.junit.jupiter.api.*;
 
 import java.math.*;
@@ -7,19 +8,19 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MoneyTests {
+class MoneyTests {
     private static final String anyAmount = "123.40";
     private Money money;
 
     @Test
-    public void hardcodedToUSD() {
+    void hardcodedToUSD() {
         givenMoneyWithAmount(anyAmount);
 
         thenCurrencyIs(money, "USD");
     }
 
     @Test
-    public void returnsAmount(){
+    void returnsAmount(){
         givenMoneyWithAmount(anyAmount);
 
         thenAmountIs(anyAmount);
