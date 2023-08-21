@@ -27,8 +27,9 @@ public class SearchResults {
      * Get this results set's hotspot group for a particular key. This will create a Hotspot object if necessary.
      */
     public Hotspot getHotspot(HotspotKey key) {
-        if (hotspots.containsKey(key))
+        if (hotspots.containsKey(key)) {
             return hotspots.get(key);
+        }
 
         var result = new Hotspot();
         hotspots.put(key, result);

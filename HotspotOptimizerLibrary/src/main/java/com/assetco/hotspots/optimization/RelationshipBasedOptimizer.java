@@ -22,10 +22,13 @@ import static com.assetco.search.results.HotspotKey.*;
  * Assigns assets to the showcase hotspot group based on their vendor status.
  */
 class RelationshipBasedOptimizer {
+
+    public static final int MAXIMUM_ITEMS_IN_SHOWCASE = 5;
+
     public void optimize(SearchResults searchResults) {
         Iterator<Asset> iterator = searchResults.getFound().iterator();
         // don't affect a showcase built by an earlier rule
-        var showcaseFull = searchResults.getHotspot(Showcase).getMembers().size() > 0;
+        var showcaseFull = !searchResults.getHotspot(Showcase).getMembers().isEmpty();
         var showcaseAssets = new ArrayList<Asset>();
         var partnerAssets = new ArrayList<Asset>();
         var goldAssets = new ArrayList<Asset>();
@@ -39,14 +42,14 @@ class RelationshipBasedOptimizer {
             else if (asset.getVendor().getRelationshipLevel() == Silver)
                 silverAssets.add(asset);
 
-            if (asset.getVendor().getRelationshipLevel() != Partner)
-                continue;
+            if (asset.getVendor().getRelationshipLevel() == Partner)
+                showcaseAssets.add(asset);
 
             // remember this partner asset
             partnerAssets.add(asset);
 
             // too many assets in showcase - put in top picks instead...
-            if (showcaseAssets.size() >= 5) {
+            if (showcaseAssets.size() >= MAXIMUM_ITEMS_IN_SHOWCASE) {
                 if (Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
                     searchResults.getHotspot(TopPicks).addMember(asset);
             } else {
@@ -76,15 +79,20 @@ class RelationshipBasedOptimizer {
 
                 // if there are already assets from a different vendor but not enough to hold showcase,
                 // clear showcase
-                if (showcaseAssets.size() != 0)
-                    if (!Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
-                        if (showcaseAssets.size() < 3)
-                            showcaseAssets.clear();
+                if (!showcaseAssets.isEmpty()) {
+                    if (!Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor())) {
+                        showcaseAssets.remove(asset);
+                    }
+                }
 
                 // add this asset to an empty showcase or showcase with same vendor in it
                 // if there's already another vendor, that vendor should take precedence!
-                if (showcaseAssets.size() == 0 || Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
-                    showcaseAssets.add(asset);
+                if (showcaseAssets.isEmpty() ||
+                        Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()) &&
+                                (!showcaseAssets.contains(asset))) {
+                        showcaseAssets.add(asset);
+
+                }
             }
         }
 
@@ -107,8 +115,11 @@ class RelationshipBasedOptimizer {
         // only copy showcase assets into hotspot if there are enough for a partner to claim the showcase
         if (!showcaseFull && showcaseAssets.size() >= 3) {
             Hotspot showcaseHotspot = searchResults.getHotspot(Showcase);
-            for (Asset asset : showcaseAssets)
-                showcaseHotspot.addMember(asset);
+            for (Asset asset : showcaseAssets) {
+                if (!showcaseHotspot.getMembers().contains(asset)) {
+                    showcaseHotspot.addMember(asset);
+                }
+            }
         }
 
         // acw-14339: gold assets should be in high value hotspots if there are no partner assets in search
