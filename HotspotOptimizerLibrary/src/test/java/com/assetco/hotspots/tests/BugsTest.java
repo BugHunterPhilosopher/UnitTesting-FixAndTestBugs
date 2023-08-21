@@ -2,6 +2,7 @@ package com.assetco.hotspots.tests;
 
 import com.assetco.hotspots.optimization.SearchResultHotspotOptimizer;
 import com.assetco.search.results.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,15 +17,24 @@ class BugsTest {
   private Asset disrupting;
   private Asset missing;
   private List<Asset> expected;
+  private AssetVendor partnerVendor;
 
-  @Test
-  void precedingPartnerWithLongTrailingAssetsDoesNotWin() {
-    // Given
-    AssetVendor partnerVendor = makeVendor("BigShotz!");
+  @BeforeEach
+  void setUp() {
+    partnerVendor = makeVendor("BigShotz!");
     missing = givenAssetInResultsWithVendor(partnerVendor);
 
     AssetVendor disruptingAssetVendor = makeVendor("Celeb Pix");
     disrupting = givenAssetInResultsWithVendor(disruptingAssetVendor);
+
+    this.searchResults = new SearchResults();
+    this.searchResults.addFound(missing);
+    this.searchResults.addFound(disrupting);
+  }
+
+  @Test
+  void precedingPartnerWithLongTrailingAssetsDoesNotWin() {
+    // Given
     expected = givenFourAssetsFromPartnerVendor(partnerVendor);
 
     var allAssets = new ArrayList<>(expected);
@@ -57,9 +67,6 @@ class BugsTest {
   }
 
   private void whenOptimize() {
-    this.searchResults = new SearchResults();
-    this.searchResults.addFound(missing);
-    this.searchResults.addFound(disrupting);
     expected.forEach(asset -> this.searchResults.addFound(asset));
 
     new SearchResultHotspotOptimizer().optimize(this.searchResults);
