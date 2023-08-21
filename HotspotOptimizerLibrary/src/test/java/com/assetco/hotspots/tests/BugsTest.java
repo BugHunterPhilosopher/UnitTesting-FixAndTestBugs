@@ -6,10 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BugsTest {
 
@@ -39,13 +39,12 @@ class BugsTest {
 
     var allAssets = new ArrayList<>(expected);
     allAssets.add(missing);
-    allAssets.add(disrupting);
 
     // When
     whenOptimize();
 
     // Then
-    thenHotspotDoesNotHave(missing);
+    thenHotspotDoesNotHave(disrupting);
     thenHotspotHasExactly(allAssets);
   }
 
@@ -69,21 +68,21 @@ class BugsTest {
   private void whenOptimize() {
     expected.forEach(asset -> this.searchResults.addFound(asset));
 
-    new SearchResultHotspotOptimizer().optimize(this.searchResults);
+    var optimizer = new SearchResultHotspotOptimizer();
+    optimizer.optimize(this.searchResults);
   }
 
   private void thenHotspotDoesNotHave(Asset asset) {
-    assertTrue(
-            this.searchResults.getHotspot(HotspotKey.Showcase).getMembers().stream()
-                    .noneMatch(asset1 -> asset1.equals(asset))
+    assertFalse(
+            this.searchResults.getHotspot(HotspotKey.Showcase).getMembers().contains(asset)
     );
   }
 
   private void thenHotspotHasExactly(List<Asset> expected) {
-    assertArrayEquals(
-            expected.toArray(),
-            this.searchResults.getHotspot(HotspotKey.Showcase).getMembers().toArray(),
-            "Both arrays should be equal!");
+    assertEquals(
+            new HashSet<>(expected),
+            new HashSet<>(this.searchResults.getHotspot(HotspotKey.Showcase).getMembers()),
+            "Both sets should be equal!");
   }
 
 }

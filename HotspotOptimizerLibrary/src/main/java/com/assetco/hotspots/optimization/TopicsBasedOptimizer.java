@@ -27,24 +27,28 @@ class TopicsBasedOptimizer {
             Asset asset = iterator.next();
 
             // make sure our hot topics list is up to date
-            if (hotTopics.size() == 0)
+            if (hotTopics.isEmpty()) {
                 hotTopicsSource.getTopics().forEach(hotTopics::add);
+            }
 
             // make sure to at least highlight
-            if (getHottestTopicIn(asset, hotTopics) != null)
+            if (getHottestTopicIn(asset, hotTopics) != null) {
                 searchResults.getHotspot(Highlight).addMember(asset);
+            }
 
             // any topic wins first time
-            if (hotTopic == null)
+            if (hotTopic == null) {
                 hotTopic = getHottestTopicIn(asset, hotTopics);
+            }
 
             // get hottest topic for this asset and start processing for showcase/top picks
             AssetTopic assetHotTopic = getHottestTopicIn(asset, hotTopics);
             if (assetHotTopic != null) {
                 if (isHotterTopic(assetHotTopic, hotTopic, hotTopics)) {
                     // move showcase assets to top picks & switch to this topic
-                    for (var surplusAsset : showcaseAssets)
+                    for (var surplusAsset : showcaseAssets) {
                         searchResults.getHotspot(TopPicks).addMember(surplusAsset);
+                    }
                     // done. reset showcase and switch to tpic
                     showcaseAssets.clear();
                     hotTopic = assetHotTopic;
@@ -52,8 +56,9 @@ class TopicsBasedOptimizer {
                 }
 
                 // add asset to showcase candidates list
-                if (assetHotTopic == hotTopic)
+                if (assetHotTopic == hotTopic) {
                     showcaseAssets.add(asset);
+                }
             } else {
                 // try another
                 continue;
@@ -84,8 +89,6 @@ class TopicsBasedOptimizer {
             if (asset.getTopics().stream().anyMatch(getAssetTopicPredicate(hotTopic)))
             {
                 showcase.addMember(asset);
-                if (++showcased >= 5)
-                    break;
             }
         }
 
@@ -94,8 +97,9 @@ class TopicsBasedOptimizer {
         while (iterator.hasNext()) {
             Asset asset = iterator.next();
 
-            if (getHottestTopicIn(asset, hotTopics) != null)
+            if (getHottestTopicIn(asset, hotTopics) != null) {
                 searchResults.getHotspot(TopPicks).addMember(asset);
+            }
         }
 
         return result;
@@ -129,8 +133,9 @@ class TopicsBasedOptimizer {
      * Note: Passing in a null topic will produce a predicate that always returns false.
      */
     private Predicate<AssetTopic> getAssetTopicPredicate(AssetTopic topic) {
-        if (topic == null)
+        if (topic == null) {
             return assetTopic -> false;
+        }
 
         return assetTopic -> topicsEquivalent(topic, assetTopic);
     }

@@ -82,7 +82,7 @@ class Any {
     }
 
     /**
-     * Genearte a set of topics with at least one topic in it but not more than five.
+     * Generate a set of topics with at least one topic in it but not more than five.
      */
     public static List<AssetTopic> setOfTopics() {
         var result = new ArrayList<AssetTopic>();
